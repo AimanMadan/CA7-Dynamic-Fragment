@@ -14,10 +14,13 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         />
-    <ImageView
-        android:layout_width="238dp"
-        android:layout_height="290dp"
-        android:background="@drawable/line_graph"
+    <com.androidplot.xy.XYPlot
         android:layout_marginTop="30dp"
+        style="@style/APDefacto"
+        android:id="@+id/plot1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ap:title="Array"
+
         />
 </FrameLayout>
