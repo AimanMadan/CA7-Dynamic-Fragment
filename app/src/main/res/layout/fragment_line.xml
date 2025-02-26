@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,15 +13,17 @@
         android:layout_height="wrap_content"
         android:text="Line Graph"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
+
+
     <com.androidplot.xy.XYPlot
         android:layout_marginTop="30dp"
         style="@style/APDefacto"
         android:id="@+id/plot1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:title="Array"
-
-        />
+        ap:rangeTitle="range"
+        ap:domainTitle="domain"
+        ap:lineLabels="left|bottom"
+        ap:lineLabelRotationBottom="-45" />
 </FrameLayout>
