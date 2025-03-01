@@ -7,23 +7,14 @@
     tools:context=".LineFragment">
 
 
-    <TextView
-        android:id="@+id/lineTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Line Graph"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/white" />
 
 
     <com.androidplot.xy.XYPlot
-        android:layout_marginTop="30dp"
-        style="@style/APDefacto"
-        android:id="@+id/plot1"
+        android:id="@+id/lineGraphPlot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:rangeTitle="range"
-        ap:domainTitle="domain"
-        ap:lineLabels="left|bottom"
+        ap:title="Line Graph"
+        ap:rangeTitle="Range"
+        ap:domainTitle="Domain"
         ap:lineLabelRotationBottom="-45" />
 </FrameLayout>

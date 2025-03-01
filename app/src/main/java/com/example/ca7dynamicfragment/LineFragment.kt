@@ -1,59 +1,82 @@
 package com.example.ca7dynamicfragment
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.androidplot.util.PixelUtils
+import com.androidplot.xy.BoundaryMode
+import com.androidplot.xy.LineAndPointFormatter
+import com.androidplot.xy.SimpleXYSeries
+import com.androidplot.xy.XYGraphWidget
+import com.androidplot.xy.XYPlot
+import com.androidplot.xy.XYSeries
+import com.androidplot.xy.StepMode
+import java.text.FieldPosition
+import java.text.Format
+import java.text.ParsePosition
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class LineFragment : Fragment(R.layout.fragment_line) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LineFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LineFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+        // 1) Get reference to the XYPlot in fragment_line.xml
+        val plot = view.findViewById<XYPlot>(R.id.lineGraphPlot)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_line, container, false)
-    }
+        // 2) Domain labels (x-axis labels)
+        val domainLabels = listOf("1", "2", "3", "4")
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LineFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LineFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        // 3) data values for each series
+        val aValues = listOf(4.3, 2.5, 3.5, 4.5)
+        val bValues = listOf(2.4, 4.4, 1.8, 2.8)
+        val cValues = listOf(2.0, 2.0, 3.0, 5.0)
+
+        // 4) Create XYSeries
+        val seriesA: XYSeries = SimpleXYSeries(aValues, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "a")
+        val seriesB: XYSeries = SimpleXYSeries(bValues, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "b")
+        val seriesC: XYSeries = SimpleXYSeries(cValues, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "c")
+
+        // 5) Format each series with its own color
+        val formatterA = LineAndPointFormatter(Color.RED, Color.RED, null, null)
+        val formatterB = LineAndPointFormatter(Color.BLUE, Color.BLUE, null, null)
+        val formatterC = LineAndPointFormatter(Color.GREEN, Color.GREEN, null, null)
+
+        // 6) Add series to the plot
+        plot.addSeries(seriesA, formatterA)
+        plot.addSeries(seriesB, formatterB)
+        plot.addSeries(seriesC, formatterC)
+
+        // 7) Set the step size to match the number of domain labels
+        plot.setDomainStep(StepMode.SUBDIVIDE, domainLabels.size.toDouble())
+
+        // 8) Format bottom (domain) labels so they show 1,2,3,4
+        plot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format = object : Format() {
+            override fun format(
+                source: Any?,
+                toAppendTo: StringBuffer?,
+                pos: FieldPosition?
+            ): StringBuffer {
+                val i = (source as Number).toInt()
+                // Make sure we don’t go out of bounds
+                if (i >= 0 && i < domainLabels.size) {
+                    toAppendTo?.append(domainLabels[i])
                 }
+                return toAppendTo!!
             }
+
+            override fun parseObject(source: String?, pos: ParsePosition?): Any? {
+                return null // Not used
+            }
+        }
+
+        // 9) Adjust the range boundaries (y-axis) so everything fits nicely
+        plot.setRangeBoundaries(0, 6, BoundaryMode.FIXED)
+
+        // (Optional) Tweak line thickness or point size
+        PixelUtils.init(context)
+        formatterA.linePaint.strokeWidth = PixelUtils.dpToPix(2f)
+        formatterB.linePaint.strokeWidth = PixelUtils.dpToPix(2f)
+        formatterC.linePaint.strokeWidth = PixelUtils.dpToPix(2f)
     }
 }
